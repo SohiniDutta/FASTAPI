@@ -1,33 +1,22 @@
 from fastapi import FastAPI
+from pydantic import BaseModel
 
 app = FastAPI()
 
-@app.get('/')
-def home():
-    return "Hello"
+class Address(BaseModel):
+    city:str
+    pin:int
 
-@app.get('/about/')
-def about():
-    return "This is about page"
+class User(BaseModel):
+    name:str
+    age:int
+    address:Address
 
-@app.get('/users/')
-def userslist():
-    return {'users':['Sita','Geeta','Lolita']}
-
-#Path Parameters with type define and validation check
-@app.get('/user/{user_id}')
-def getUser(user_id:int):
-    return f'this is the value : {user_id}'
-
-#Query Parameters
-@app.get('/product/')
-def getProduct(name:str = 'Anonymous',page:int=1,price:float=None):
+@app.post('/createUser')
+def createUser(user:User):
     return {
-          'name':name,
-          'page':page,
-          'price':price
+        'message':'User Data',
+        'details':user
     }
-#Path parameters are part of the URL path. They usually identify a specific resource or record.
-#Query parameters are added after ? in the URL.They are generally used for filtering, searching, sorting and pagination
-# Query parameters are not declared inside the route URL..
-# Path parameter {user_id} is defined inside the route.
+
+
